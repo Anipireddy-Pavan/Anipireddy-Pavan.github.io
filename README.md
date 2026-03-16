@@ -4,9 +4,6 @@
 
 Welcome to my personal portfolio repository. This site showcases my data analytics and data science projects, skills, and professional background.
 
-## 🌐 Live Portfolio
-👉 [https://anipireddy-pavan.github.io](https://anipireddy-pavan.github.io)
-
 ## 👨‍💻 About Me
 I'm **Pavan Anipireddy**, a Data Analyst and Data Scientist based in **Bengaluru, India**.  
 B.Tech in Computer Science Engineering from Chaitanya Bharathi Institute of Technology (CGPA: 7.6/10).  
