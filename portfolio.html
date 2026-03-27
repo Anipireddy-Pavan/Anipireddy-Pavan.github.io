@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pavan Anipireddy — Data Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #22222e;
+    --accent: #c8f05a;
+    --accent2: #5af0c8;
+    --accent3: #f05a8c;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.18s ease;
+    opacity: 0.5;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 3rem;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-title {
+    font-size: 1rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #aaaabc;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
+
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.85rem 1.8rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.2s;
+    cursor: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0f;
+  }
+  .btn-primary:hover { background: #ddf87a; transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* Hero right - stats */
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.8rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .stat-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .stat-card:hover::before { transform: scaleX(1); }
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.8rem;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .stat-number span { color: var(--accent); }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Scrolling marquee */
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 1rem 0;
+    white-space: nowrap;
+  }
+  .marquee-track {
+    display: inline-block;
+    animation: marquee 24s linear infinite;
+  }
+  .marquee-track span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 0 2rem;
+  }
+  .marquee-track span.accent { color: var(--accent); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Section commons */
+  section { padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white);
+    margin-bottom: 3rem;
+    line-height: 1.1;
+  }
+
+  /* Skills */
+  #skills { max-width: 1200px; }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+  .skill-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.6rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .skill-group:hover { border-color: var(--accent2); transform: translateY(-3px); }
+  .skill-group-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skill-tag {
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.3rem 0.65rem;
+    transition: all 0.2s;
+  }
+  .skill-group:hover .skill-tag { border-color: rgba(90,240,200,0.2); color: var(--text); }
+
+  /* Projects */
+  #projects { max-width: 1200px; }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+    display: flex; flex-direction: column;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .project-card.featured { grid-column: span 2; }
+  .project-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+    margin-bottom: 1.2rem;
+    border: 1px solid;
+  }
+  .tag-ml { color: var(--accent); border-color: rgba(200,240,90,0.3); background: rgba(200,240,90,0.06); }
+  .tag-ts { color: var(--accent2); border-color: rgba(90,240,200,0.3); background: rgba(90,240,200,0.06); }
+  .tag-sql { color: var(--accent3); border-color: rgba(240,90,140,0.3); background: rgba(240,90,140,0.06); }
+  .tag-bi { color: #f0c05a; border-color: rgba(240,192,90,0.3); background: rgba(240,192,90,0.06); }
+  .tag-reg { color: #a05af0; border-color: rgba(160,90,240,0.3); background: rgba(160,90,240,0.06); }
+
+  .project-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+    line-height: 1.2;
+  }
+  .project-desc {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--muted);
+    margin-bottom: 1.4rem;
+    flex: 1;
+  }
+  .project-metrics {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    margin-bottom: 1.4rem;
+  }
+  .metric {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(200,240,90,0.06);
+    border: 1px solid rgba(200,240,90,0.2);
+    border-radius: 2px;
+    padding: 0.3rem 0.65rem;
+  }
+  .metric.blue { color: var(--accent2); background: rgba(90,240,200,0.06); border-color: rgba(90,240,200,0.2); }
+  .metric.pink { color: var(--accent3); background: rgba(240,90,140,0.06); border-color: rgba(240,90,140,0.2); }
+  .project-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+  }
+  .project-stack { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .stack-item {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .project-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    display: flex; align-items: center; gap: 0.3rem;
+    transition: gap 0.2s;
+  }
+  .project-link:hover { gap: 0.6rem; }
+
+  /* Certifications */
+  #certifications { max-width: 1200px; }
+  .cert-list { display: flex; flex-direction: column; gap: 1rem; }
+  .cert-item {
+    display: flex; align-items: center; gap: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.4rem 2rem;
+    transition: border-color 0.2s;
+  }
+  .cert-item:hover { border-color: var(--accent); }
+  .cert-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    min-width: 60px;
+  }
+  .cert-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+  .cert-org {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  /* Education */
+  #education { max-width: 1200px; }
+  .edu-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: start;
+    transition: border-color 0.2s;
+  }
+  .edu-card:hover { border-color: var(--accent2); }
+  .edu-degree {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .edu-school {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+  }
+  .edu-cgpa {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+  .edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* Contact */
+  #contact {
+    max-width: 1200px;
+    text-align: center;
+  }
+  .contact-grid {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  .contact-link {
+    display: flex; align-items: center; gap: 0.6rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem 1.8rem;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+  .contact-link svg { width: 16px; height: 16px; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    #hero { padding: 7rem 1.5rem 3rem; }
+    .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+    section { padding: 4rem 1.5rem; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    .project-card.featured { grid-column: span 1; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .edu-card { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .hero-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PA // Portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero" style="padding-top:8rem; max-width:100%;">
+  <div class="hero-grid">
+    <div>
+      <p class="hero-eyebrow">// Data Analyst · Junior Data Scientist</p>
+      <h1 class="hero-name">Pavan<br/><em>Anipireddy</em></h1>
+      <p class="hero-title">Bengaluru, India · Open to Opportunities</p>
+      <p class="hero-desc">
+        Turning complex data into decisions. I build predictive models, design BI dashboards, and engineer features that create real business impact — from churn reduction to cost optimisation.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View Projects →</a>
+        <a href="https://github.com/Anipireddy-Pavan" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-number">9<span>+</span></div>
+        <div class="stat-label">Projects Built</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">85<span>%</span></div>
+        <div class="stat-label">Model Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">0.93</div>
+        <div class="stat-label">R² Score</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3<span>+</span></div>
+        <div class="stat-label">Certifications</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="accent">SQL</span><span>·</span>
+    <span>Python</span><span>·</span>
+    <span class="accent">Power BI</span><span>·</span>
+    <span>Tableau</span><span>·</span>
+    <span class="accent">Machine Learning</span><span>·</span>
+    <span>ARIMA</span><span>·</span>
+    <span class="accent">LSTM</span><span>·</span>
+    <span>XGBoost</span><span>·</span>
+    <span class="accent">Pandas</span><span>·</span>
+    <span>Random Forest</span><span>·</span>
+    <span class="accent">Feature Engineering</span><span>·</span>
+    <span>Streamlit</span><span>·</span>
+    <span class="accent">EDA</span><span>·</span>
+    <span>NumPy</span><span>·</span>
+    <span class="accent">Scikit-learn</span><span>·</span>
+    <span>Data Visualisation</span><span>·</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <span class="accent">SQL</span><span>·</span>
+    <span>Python</span><span>·</span>
+    <span class="accent">Power BI</span><span>·</span>
+    <span>Tableau</span><span>·</span>
+    <span class="accent">Machine Learning</span><span>·</span>
+    <span>ARIMA</span><span>·</span>
+    <span class="accent">LSTM</span><span>·</span>
+    <span>XGBoost</span><span>·</span>
+    <span class="accent">Pandas</span><span>·</span>
+    <span>Random Forest</span><span>·</span>
+    <span class="accent">Feature Engineering</span><span>·</span>
+    <span>Streamlit</span><span>·</span>
+    <span class="accent">EDA</span><span>·</span>
+    <span>NumPy</span><span>·</span>
+    <span class="accent">Scikit-learn</span><span>·</span>
+    <span>Data Visualisation</span><span>·</span>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label reveal">// 02 — Expertise</p>
+  <h2 class="section-title reveal">Skills &amp; Tools</h2>
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Core Technical</div>
+      <div class="skill-tags">
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">CTEs</span>
+        <span class="skill-tag">Window Functions</span>
+        <span class="skill-tag">Query Optimisation</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Pandas</span>
+        <span class="skill-tag">NumPy</span>
+        <span class="skill-tag">Scikit-learn</span>
+        <span class="skill-tag">Advanced Excel</span>
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">GitHub</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Analytics &amp; Modelling</div>
+      <div class="skill-tags">
+        <span class="skill-tag">EDA</span>
+        <span class="skill-tag">Predictive Analytics</span>
+        <span class="skill-tag">Regression</span>
+        <span class="skill-tag">Classification</span>
+        <span class="skill-tag">Logistic Regression</span>
+        <span class="skill-tag">Random Forest</span>
+        <span class="skill-tag">XGBoost</span>
+        <span class="skill-tag">Feature Engineering</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Time Series Analysis</div>
+      <div class="skill-tags">
+        <span class="skill-tag">ARIMA</span>
+        <span class="skill-tag">LSTM</span>
+        <span class="skill-tag">Forecasting</span>
+        <span class="skill-tag">Trend Analysis</span>
+        <span class="skill-tag">Seasonality</span>
+        <span class="skill-tag">Lag Features</span>
+        <span class="skill-tag">Rolling Statistics</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Data Visualisation &amp; BI</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Power BI</span>
+        <span class="skill-tag">Tableau</span>
+        <span class="skill-tag">KPI Dashboards</span>
+        <span class="skill-tag">Business Reporting</span>
+        <span class="skill-tag">Insights Communication</span>
+        <span class="skill-tag">Streamlit</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Data Quality &amp; Processing</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Data Cleaning</span>
+        <span class="skill-tag">Missing Value Treatment</span>
+        <span class="skill-tag">Outlier Detection</span>
+        <span class="skill-tag">Data Validation</span>
+        <span class="skill-tag">Data Preprocessing</span>
+      </div>
+    </div>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Business Impact</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Customer Retention</span>
+        <span class="skill-tag">Cost Optimisation</span>
+        <span class="skill-tag">Revenue Analysis</span>
+        <span class="skill-tag">Trend Identification</span>
+        <span class="skill-tag">Data-Driven Decisions</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label reveal">// 03 — Work</p>
+  <h2 class="section-title reveal">Projects</h2>
+  <div class="projects-grid">
+
+    <!-- Featured: Customer Churn -->
+    <div class="project-card featured reveal">
+      <span class="project-tag tag-ml">Machine Learning · Classification</span>
+      <h3 class="project-title">Customer Churn Prediction</h3>
+      <p class="project-desc">
+        Built Logistic Regression and Random Forest models to identify high-risk customers before they churn. Conducted EDA on behavioural data to uncover key drivers — contract type, tenure, and monthly charges — and developed dashboards to support proactive retention strategies.
+      </p>
+      <div class="project-metrics">
+        <span class="metric">85%+ Accuracy</span>
+        <span class="metric">93% Recall</span>
+        <span class="metric blue">Random Forest</span>
+        <span class="metric pink">Logistic Regression</span>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">Python</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Scikit-learn</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Pandas</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Power BI</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/Customer_churn_project" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Coal Forecasting -->
+    <div class="project-card reveal">
+      <span class="project-tag tag-ts">Time Series · Forecasting</span>
+      <h3 class="project-title">Coal Price Forecasting</h3>
+      <p class="project-desc">
+        Built ARIMA and LSTM models to forecast monthly coal prices. Analysed macroeconomic indicators and energy market dynamics, enabling a predictive procurement strategy with ~20% potential cost optimisation for a steel manufacturer.
+      </p>
+      <div class="project-metrics">
+        <span class="metric">MAPE &lt; 10%</span>
+        <span class="metric">R² = 0.93</span>
+        <span class="metric blue">~20% Cost Savings</span>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">Python</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">ARIMA</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">LSTM</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/Coal_Price_Forecasting" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- House Price -->
+    <div class="project-card reveal">
+      <span class="project-tag tag-reg">Regression · Feature Engineering</span>
+      <h3 class="project-title">House Price Estimation</h3>
+      <p class="project-desc">
+        Built XGBoost and Linear Regression models to predict house prices with a high R² score. Engineered domain-specific features like price per sq. ft. and deployed an interactive Streamlit web app for real-time price estimation.
+      </p>
+      <div class="project-metrics">
+        <span class="metric">High R² Score</span>
+        <span class="metric blue">Streamlit App</span>
+        <span class="metric pink">XGBoost</span>
+      </div>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">Python</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">XGBoost</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Streamlit</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/House_PriceEstimation_Project" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Job Market SQL -->
+    <div class="project-card reveal">
+      <span class="project-tag tag-sql">SQL · Analysis</span>
+      <h3 class="project-title">Job Market Analysis</h3>
+      <p class="project-desc">
+        Analysed job market trends using advanced SQL queries — CTEs, window functions, and aggregations — to extract insights on in-demand skills, salary distributions, and hiring patterns across industries.
+      </p>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">SQL</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">CTEs</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Window Functions</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/Job_Market_Analysis_SQL" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Customer Behaviour -->
+    <div class="project-card reveal">
+      <span class="project-tag tag-ml">Analysis · EDA</span>
+      <h3 class="project-title">Customer Behaviour Analysis</h3>
+      <p class="project-desc">
+        Explored and analysed customer behavioural patterns using Python and EDA techniques to identify purchasing trends, segment customers, and surface actionable insights for marketing and retention teams.
+      </p>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">Python</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Pandas</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Matplotlib</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/Customer_Behavior_Analysis" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Sales Dashboard -->
+    <div class="project-card reveal">
+      <span class="project-tag tag-bi">BI · Dashboard</span>
+      <h3 class="project-title">Sales Dashboard</h3>
+      <p class="project-desc">
+        Designed and built an interactive sales dashboard in Power BI / Tableau with KPIs, trend charts, and regional breakdowns — enabling stakeholders to monitor performance and make data-driven decisions at a glance.
+      </p>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">Power BI</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Tableau</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Excel</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/Sales_Dashboard" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Credit Risk -->
+    <div class="project-card reveal">
+      <span class="project-tag tag-ml">Machine Learning · Risk</span>
+      <h3 class="project-title">Credit Risk Data Analysis</h3>
+      <p class="project-desc">
+        Performed comprehensive credit risk analysis using Python and ML techniques. Cleaned and preprocessed financial datasets, built classification models to predict default risk, and visualised key risk indicators.
+      </p>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">Python</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Scikit-learn</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Pandas</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/Credit_risk_data_analysis" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Zepto SQL -->
+    <div class="project-card reveal">
+      <span class="project-tag tag-sql">SQL · Business Analysis</span>
+      <h3 class="project-title">Zepto SQL Business Analysis</h3>
+      <p class="project-desc">
+        Conducted end-to-end business analysis for a quick-commerce use case using SQL. Wrote complex queries to analyse order patterns, delivery performance, revenue trends, and customer behaviour for strategic insights.
+      </p>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">SQL</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Business Analysis</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">EDA</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/zepto_sql-business-analysis" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+    <!-- Retail Sales -->
+    <div class="project-card reveal">
+      <span class="project-tag tag-bi">Retail · Sales Analysis</span>
+      <h3 class="project-title">Retail Sales Analysis</h3>
+      <p class="project-desc">
+        Analysed retail sales data to identify top-performing products, seasonal trends, and customer purchasing patterns. Delivered insights through visualisations and summary reports to support inventory and pricing decisions.
+      </p>
+      <div class="project-footer">
+        <div class="project-stack">
+          <span class="stack-item">Python</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">SQL</span>
+          <span class="stack-item">·</span>
+          <span class="stack-item">Tableau</span>
+        </div>
+        <a href="https://github.com/Anipireddy-Pavan/Retail_Sales_Analysis" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <p class="section-label reveal">// 04 — Credentials</p>
+  <h2 class="section-title reveal">Certifications</h2>
+  <div class="cert-list">
+    <div class="cert-item reveal">
+      <span class="cert-year">2025</span>
+      <span class="cert-name">Power BI Business Intelligence Certification</span>
+      <span class="cert-org">Microsoft / Power BI</span>
+    </div>
+    <div class="cert-item reveal">
+      <span class="cert-year">2025</span>
+      <span class="cert-name">Data Analytics Job Simulation</span>
+      <span class="cert-org">Deloitte · Forage</span>
+    </div>
+    <div class="cert-item reveal">
+      <span class="cert-year">2024–25</span>
+      <span class="cert-name">Data Analytics with Python &amp; BI</span>
+      <span class="cert-org">360 DigiTMG</span>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <p class="section-label reveal">// 05 — Background</p>
+  <h2 class="section-title reveal">Education</h2>
+  <div class="edu-card reveal">
+    <div>
+      <div class="edu-degree">Bachelor of Technology</div>
+      <div class="edu-school">Computer Science Engineering · Chaitanya Bharathi Institute of Technology</div>
+      <div class="edu-cgpa">CGPA: 7.6 / 10</div>
+    </div>
+    <div class="edu-year">2020 – 2024</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label reveal" style="text-align:center;">// 06 — Get In Touch</p>
+  <h2 class="section-title reveal" style="text-align:center;">Let's Connect</h2>
+  <p class="reveal" style="color:var(--muted); font-size:0.95rem; max-width:480px; margin:0 auto 2rem; line-height:1.7;">
+    Open to data analyst and junior data scientist roles. Feel free to reach out via email or connect on LinkedIn.
+  </p>
+  <div class="contact-grid reveal">
+    <a href="mailto:anipireddypavan@gmail.com" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      anipireddypavan@gmail.com
+    </a>
+    <a href="https://linkedin.com/in/pavan-anipireddy" target="_blank" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      linkedin.com/in/pavan-anipireddy
+    </a>
+    <a href="https://github.com/Anipireddy-Pavan" target="_blank" class="contact-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      github.com/Anipireddy-Pavan
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>Built with HTML · Pavan Anipireddy © 2025</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 6 + 'px';
+    cursor.style.top = my - 6 + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx - 18) * 0.12;
+    ry += (my - ry - 18) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2.5)');
+    el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
